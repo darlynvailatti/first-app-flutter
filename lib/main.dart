@@ -1,46 +1,69 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:my_first_app/domain/answer.dart';
+import 'package:my_first_app/domain/question.dart';
+import 'package:my_first_app/widget/no_questions.dart';
+import 'package:my_first_app/widget/question_card.dart';
+import 'package:my_first_app/widget/quiz.dart';
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _MyAppState();
+  }
+}
+
+class _MyAppState extends State<MyApp> {
+  List<Widget> _questionsWidgets = List<Widget>();
+  int _questionIndex = 0;
+
+  void _chooseAnswer() {
+    setState(() {
+      _questionIndex++;
+    });
+  }
+
+  void _buildQuestions() {
+    print('Building questions...');
+    Question questionOne = Question("Who invented eletric light?",
+        {Answer("Tesla"): true, Answer("Edson"): false});
+
+    Question questionTwo = Question("What's yout favorite animal?",
+        {Answer("Zebra"): true, Answer("Lion"): false});
+
+    var questionCardOneWidget = QuestionCard(questionOne, _chooseAnswer);
+    var questionCardTwoWidget = QuestionCard(questionTwo, _chooseAnswer);
+
+    _questionsWidgets.clear();
+    _questionsWidgets.addAll([questionCardOneWidget, questionCardTwoWidget]);
+  }
+
+  bool _isAnyQuestionYet() {
+    print('Question Index: $_questionIndex | $_questionsWidgets');
+    return _questionIndex < _questionsWidgets.length;
+  }
+
+  @override
+  void initState() {
+    _buildQuestions();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    List<String> questions = [
-      'First question',
-      'Second question',
-    ];
-
-    List<Widget> questionsWidgets = List<Widget>();
-    for(String question in questions){
-      Card card = Card(
-        elevation: 10,
-        child: ListBody(
-          children: [
-            Text(question),
-            RaisedButton(
-              child: Text('Answer'),
-              onPressed: () => print('Pressed button of question ' + question),
-            )
-          ],
-        ),
-      );
-      questionsWidgets.add(card);
-    }
-
     return MaterialApp(
       home: Scaffold(
-
         appBar: AppBar(
-          title: Text('Dear Fried'),
+          title: Text('Questions Quiz'),
         ),
-        body: Column(
-          children:
-            questionsWidgets,
-        ),
+        body: Column(children: [
+          _isAnyQuestionYet()
+              ? Quiz(_questionsWidgets[_questionIndex])
+              : NoQuestions()
+        ]),
       ),
     );
   }
