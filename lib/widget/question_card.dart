@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_first_app/domain/answer.dart';
 import 'package:my_first_app/domain/question.dart';
 
 class QuestionCard extends StatelessWidget {
+
   final Question _question;
 
   final Function _chooseAnswer;
@@ -16,7 +16,7 @@ class QuestionCard extends StatelessWidget {
     _question.answers.forEach((answer, isCorrect) => {
           answersWidgets.add(RaisedButton(
             child: Text(answer.description),
-            onPressed: _chooseAnswer,
+            onPressed: () => _chooseAnswer(isCorrect),
           ))
         });
 
@@ -39,4 +39,6 @@ class QuestionCard extends StatelessWidget {
       ),
     );
   }
+
+  Question get question => _question;
 }

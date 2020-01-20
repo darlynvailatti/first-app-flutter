@@ -2,14 +2,18 @@
 
 import 'package:flutter/cupertino.dart';
 
-class NoQuestions extends StatelessWidget {
+class Result extends StatelessWidget {
+
+  final int _totalScore;
+
+  Result(this._totalScore);
 
   @override
   Widget build(BuildContext context) {
 
     return Center(
       child: Text(
-        'No questions avaliable',
+        'Total score: $_totalScore',
         style: TextStyle(
           fontSize: 20
         ),

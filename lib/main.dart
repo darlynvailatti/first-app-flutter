@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_first_app/domain/answer.dart';
 import 'package:my_first_app/domain/question.dart';
-import 'package:my_first_app/widget/no_questions.dart';
+import 'package:my_first_app/widget/result.dart';
 import 'package:my_first_app/widget/question_card.dart';
 import 'package:my_first_app/widget/quiz.dart';
 
@@ -12,27 +12,36 @@ void main() {
 class MyApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _MyAppState();
+    return _QuizState();
   }
 }
 
-class _MyAppState extends State<MyApp> {
+class _QuizState extends State<MyApp> {
   List<Widget> _questionsWidgets = List<Widget>();
   int _questionIndex = 0;
+  int _totalScore = 0;
 
-  void _chooseAnswer() {
+  void _chooseAnswer(bool isCorrect) {
     setState(() {
+      if(isCorrect) {
+        QuestionCard questionCard = _questionsWidgets[_questionIndex] as QuestionCard;
+        var score = questionCard.question.score;
+        _totalScore = _totalScore + score;
+      }
       _questionIndex++;
     });
+
   }
 
   void _buildQuestions() {
     print('Building questions...');
     Question questionOne = Question("Who invented eletric light?",
-        {Answer("Tesla"): true, Answer("Edson"): false});
+        {Answer("Tesla"): true, Answer("Edson"): false},
+        10);
 
     Question questionTwo = Question("What's yout favorite animal?",
-        {Answer("Zebra"): true, Answer("Lion"): false});
+        {Answer("Zebra"): true, Answer("Lion"): false},
+        20);
 
     var questionCardOneWidget = QuestionCard(questionOne, _chooseAnswer);
     var questionCardTwoWidget = QuestionCard(questionTwo, _chooseAnswer);
@@ -62,7 +71,7 @@ class _MyAppState extends State<MyApp> {
         body: Column(children: [
           _isAnyQuestionYet()
               ? Quiz(_questionsWidgets[_questionIndex])
-              : NoQuestions()
+              : Result(_totalScore)
         ]),
       ),
     );
