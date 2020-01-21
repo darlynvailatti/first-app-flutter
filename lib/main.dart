@@ -21,6 +21,14 @@ class _QuizState extends State<MyApp> {
   int _questionIndex = 0;
   int _totalScore = 0;
 
+  void _resetQuiz(){
+    setState(() {
+      _totalScore = 0;
+      _questionIndex = 0;
+      _buildQuestions();
+    });
+  }
+
   void _chooseAnswer(bool isCorrect) {
     setState(() {
       if(isCorrect) {
@@ -71,7 +79,7 @@ class _QuizState extends State<MyApp> {
         body: Column(children: [
           _isAnyQuestionYet()
               ? Quiz(_questionsWidgets[_questionIndex])
-              : Result(_totalScore)
+              : Result(_totalScore, _resetQuiz)
         ]),
       ),
     );
